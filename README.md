@@ -208,8 +208,8 @@ Message contents are not recorded unless you opt in.
 ## Roadmap
 
 - [x] Design ([DESIGN.md](DESIGN.md))
-- [ ] Reserve crate names on crates.io (`0.0.1` placeholders)
-- [ ] `flow-agent-core`
+- [x] Reserve crate names on crates.io (`0.0.1` placeholders)
+- [x] `flow-agent-core`
 - [ ] `flow-agent-models`
 - [ ] `flow-agent-graph`
 - [ ] `flow-agent-checkpoint`

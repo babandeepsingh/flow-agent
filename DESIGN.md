@@ -854,7 +854,7 @@ were checked and are **available** on crates.io as of 2026-10-26.
 | PR | Crate | Contents |
 |---|---|---|
 | 0 | — | This `DESIGN.md` + `README.md` (review only) |
-| 1 | `flow-agent-core` | Workspace skeleton, licenses, CI workflow, everything in §3 |
+| 1 | `flow-agent-core` | Workspace skeleton, licenses, CI workflow, name-reservation workflow, everything in §3 |
 | 2 | `flow-agent-models` | §4, FakeChatModel, OpenAI + Anthropic behind features |
 | 3 | `flow-agent-graph` | §5 |
 | 4 | `flow-agent-checkpoint` | §6, conformance suite, resume/replay integration tests |
@@ -863,13 +863,31 @@ were checked and are **available** on crates.io as of 2026-10-26.
 
 ---
 
-## 15. Decisions to confirm in review
+## 15. Decisions
 
-1. **`invoke(input)` + `invoke_with(input, &config)`** instead of a single method always taking a config.
-2. **`async-trait`** for object-safe async traits (native `async fn` in traits isn't `dyn`-compatible yet). Small, well-known dependency; one `Box` per call.
-3. **Checkpointer trait in core**, implementations in `flow-agent-checkpoint`.
-4. **Providers enabled by default in the umbrella crate only.**
-5. **Interrupt result shape**: `__interrupt__` key in the returned state (LangGraph-compatible) plus a typed `run()`.
-6. **`sqlx`** for SQLite and Postgres.
-7. **Dead-end nodes are a compile error** (LangGraph allows them silently); explicit `add_edge(x, END)` required.
-8. **Crates live under `crates/`** with a root virtual manifest.
+Confirmed by the project owner:
+
+| Question | Decision |
+|---|---|
+| Providers working out of the box | **Claude and OpenAI** both on by default in the umbrella crate; sub-crates keep everything off. |
+| A node with no outgoing edge | **Compile error** (stricter than LangGraph); write `add_edge(x, END)` explicitly. |
+| When to go live on crates.io | **Reserve the names now** with `0.0.1` placeholders, real `0.1.0` when all crates are done. |
+| Review flow | **One PR per crate**; the next starts only after the previous is approved. |
+
+Technical defaults chosen by the implementer (change on request):
+
+1. `invoke(input)` + `invoke_with(input, &config)` instead of one method that always takes a config.
+2. `async-trait` for object-safe async traits (native `async fn` in traits isn't `dyn`-compatible yet).
+3. `Checkpointer` trait in core, implementations in `flow-agent-checkpoint`.
+4. Interrupted runs return state with an `__interrupt__` key (LangGraph-compatible) plus a typed `run()`.
+5. `sqlx` (no macros) for SQLite and Postgres.
+6. Crates live under `crates/` with a root virtual manifest.
+
+### Reserving crate names
+
+PR 1 adds a manually triggered `reserve-names.yml` workflow that publishes a
+minimal `0.0.1` of each of the six crates (real description, links to this
+repository, no code) using the `CARGO_REGISTRY_TOKEN` secret. The owner runs it
+once from the GitHub *Actions* tab after adding the secret. crates.io forbids
+mass name-squatting, but reserving the names of a single, actively developed
+project is normal practice; the placeholders are superseded by `0.1.0`.

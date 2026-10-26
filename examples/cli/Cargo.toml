@@ -1,0 +1,13 @@
+[package]
+name = "cli"
+description = "Example: interactive terminal chat with token streaming and tool approval."
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+flow-agent = { workspace = true, features = ["anthropic", "openai"] }
+futures.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "io-std", "io-util"] }

@@ -9,9 +9,8 @@ background worker.
 [![docs.rs](https://docs.rs/flow-agent/badge.svg)](https://docs.rs/flow-agent)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
 
-> **Status: pre-release, under construction.** The API is specified in
-> [DESIGN.md](DESIGN.md) and the crates are being built one by one. The first
-> crates.io release will be `0.1.0`. The examples below show the planned API.
+> **Status: `0.1.0` release candidate.** All crates are implemented and tested;
+> the design is in [DESIGN.md](DESIGN.md). APIs may still change before `1.0`.
 
 - **Simple**: structs, methods and builder chaining, like LangChain in Python.
 - **JSON in, JSON out**: `serde_json::Value` everywhere, so no generics in your code.
@@ -115,14 +114,14 @@ let state = agent.invoke(json!("What's the weather in Paris?")).await?;
 ### 4. Build your own graph
 
 ```rust
+let tools = ToolRegistry::new().with(weather);
+
 let graph = StateGraph::new()
     .key("messages", Reducer::Messages)
     .add_node("agent", model.bind_tools(&tools))
     .add_node("tools", ToolNode::new(tools))
     .add_edge(START, "agent")
-    .add_conditional_edges("agent", |state: &Value| {
-        if has_tool_calls(state) { "tools" } else { END }
-    })
+    .add_conditional_edges("agent", tools_condition) // "tools" if the model asked for tools, else END
     .add_edge("tools", "agent");
 
 let app = graph.compile_with(
@@ -154,8 +153,11 @@ forward it straight to Server-Sent Events or a WebSocket.
 ### 6. Human-in-the-loop
 
 ```rust
-// Inside a node:
-let answer = ctx.interrupt(json!({ "question": "Send this email?" }))?;
+// A node that asks a person before continuing:
+.add_node("review", |state: Value, ctx: NodeContext| async move {
+    let answer = ctx.interrupt(json!({ "question": "Send this email?" }))?;
+    Ok(json!({ "approved": answer["approved"] }))
+})
 
 // In your app:
 let out = app.invoke_with(input, &config).await?;   // pauses; out["__interrupt__"] has the question
@@ -214,7 +216,7 @@ Message contents are not recorded unless you opt in.
 - [x] `flow-agent-graph`
 - [x] `flow-agent-checkpoint`
 - [x] `flow-agent-prebuilt`
-- [ ] `flow-agent` umbrella + examples
+- [x] `flow-agent` umbrella + examples
 - [ ] Publish `0.1.0` to crates.io
 
 ## Contributing
@@ -231,10 +233,13 @@ CI runs the same checks on every pull request. Tests never call real APIs.
 
 All crates share one version and are published together to crates.io.
 
-1. Bump `version` in the root `Cargo.toml` (`[workspace.package]`) and update the changelog.
-2. Commit, then tag and push: `git tag v0.1.0 && git push origin v0.1.0`.
-3. The `release` workflow runs the checks and publishes the crates in dependency order:
-   `core → models → graph → checkpoint → prebuilt → flow-agent`.
+1. Bump `version` in the root `Cargo.toml` (`[workspace.package]` and the internal
+   `[workspace.dependencies]` entries) and update [CHANGELOG.md](CHANGELOG.md).
+2. Optional: **Actions → Release → Run workflow** (dry run) to verify packaging.
+3. Commit, then tag and push: `git tag v0.1.0 && git push origin v0.1.0`.
+4. The `release` workflow runs the checks and publishes the crates in dependency order:
+   `core → models → graph → checkpoint → prebuilt → flow-agent`. Already-published
+   versions are skipped, so a failed release can simply be re-run.
 
 One-time setup: create an API token at <https://crates.io/settings/tokens>
 (scope `publish-new` and `publish-update`) and save it as the repository secret

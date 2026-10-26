@@ -1,0 +1,15 @@
+[package]
+name = "worker"
+description = "Example: background worker running a flow-agent graph per job with bounded concurrency and graceful shutdown."
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+flow-agent = { workspace = true, features = ["anthropic", "openai"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "signal", "time"] }
+tokio-util.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true

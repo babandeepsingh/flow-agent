@@ -15,9 +15,11 @@ categories = ["asynchronous", "api-bindings", "development-tools"]
 
 [workspace.dependencies]
 flow-agent-core = { path = "crates/flow-agent-core", version = "0.1.0" }
+flow-agent-models = { path = "crates/flow-agent-models", version = "0.1.0" }
 
 async-trait = "0.1"
 chrono = { version = "0.4", default-features = false, features = ["clock", "serde", "std"] }
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "json", "stream", "http2"] }
 futures = { version = "0.3", default-features = false, features = ["std", "async-await"] }
 schemars = "1"
 serde = { version = "1", features = ["derive"] }

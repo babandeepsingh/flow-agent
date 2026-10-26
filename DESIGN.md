@@ -460,7 +460,7 @@ providers.
 
 | Feature | Default | Pulls in |
 |---|---|---|
-| `openai` | off | `reqwest` (rustls, json, stream), `eventsource-stream` |
+| `openai` | off | `reqwest` (rustls, json, stream); SSE parsing is built in |
 | `anthropic` | off | same as above |
 
 No provider is enabled in `flow-agent-models` by default; the umbrella crate

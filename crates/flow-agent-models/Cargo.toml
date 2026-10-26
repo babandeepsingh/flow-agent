@@ -1,0 +1,45 @@
+[package]
+name = "flow-agent-models"
+description = "Chat models for flow-agent: one ChatModel API over OpenAI, Anthropic and a FakeChatModel for tests, with streaming and tool calls."
+readme = "README.md"
+documentation = "https://docs.rs/flow-agent-models"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[features]
+default = []
+## OpenAI Chat Completions API and OpenAI-compatible servers (vLLM, Ollama, LM Studio...).
+openai = ["http"]
+## Anthropic Messages API (Claude).
+anthropic = ["http"]
+# Internal: shared HTTP client.
+http = ["dep:reqwest"]
+
+[dependencies]
+flow-agent-core.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+reqwest = { workspace = true, optional = true }
+serde.workspace = true
+serde_json.workspace = true
+tokio = { workspace = true, features = ["time", "sync"] }
+tracing.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+reqwest.workspace = true
+tokio-util.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "test-util", "net", "io-util"] }
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true

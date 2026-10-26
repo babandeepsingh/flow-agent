@@ -1,0 +1,21 @@
+# Run once by hand (Actions tab > "Reserve crate names" > Run workflow) to claim
+# the flow-agent crate names on crates.io with 0.0.1 placeholders.
+name: Reserve crate names
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reserve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Publish placeholders
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: .github/scripts/reserve-names.sh

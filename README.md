@@ -211,7 +211,7 @@ Message contents are not recorded unless you opt in.
 - [x] Reserve crate names on crates.io (`0.0.1` placeholders)
 - [x] `flow-agent-core`
 - [x] `flow-agent-models`
-- [ ] `flow-agent-graph`
+- [x] `flow-agent-graph`
 - [ ] `flow-agent-checkpoint`
 - [ ] `flow-agent-prebuilt`
 - [ ] `flow-agent` umbrella + examples

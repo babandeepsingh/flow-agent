@@ -225,6 +225,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "flow-agent-graph"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "flow-agent-core",
+ "flow-agent-models",
+ "futures",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "flow-agent-models"
 version = "0.1.0"
 dependencies = [

@@ -425,8 +425,8 @@ impl ToolRegistry {
     /// Execute several calls concurrently (bounded by `config.max_concurrency`).
     /// Results keep the order of `calls`.
     pub async fn call_many(&self, calls: &[ToolCall], config: &RunConfig) -> Vec<ToolResult> {
-        futures::stream::iter(calls)
-            .map(|c| self.call(c, config))
+        futures::stream::iter(calls.iter().cloned())
+            .map(|c| async move { self.call(&c, config).await })
             .buffered(config.max_concurrency.max(1))
             .collect()
             .await

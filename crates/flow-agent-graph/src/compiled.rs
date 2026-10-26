@@ -552,6 +552,15 @@ impl CompiledGraph {
                     .as_ref()
                     .and_then(|c| c.state.as_object().cloned())
                     .unwrap_or_default();
+                let input = match input {
+                    // Shorthand: `invoke("hi")` on a graph with a `messages` key.
+                    Value::String(_) | Value::Array(_)
+                        if g.schema.reducers.contains_key("messages") =>
+                    {
+                        json!({ "messages": input })
+                    }
+                    other => other,
+                };
                 g.schema
                     .apply(&mut state, &[(START.to_owned(), input)])
                     .map_err(|e| e.context("applying graph input"))?;

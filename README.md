@@ -213,7 +213,7 @@ Message contents are not recorded unless you opt in.
 - [x] `flow-agent-models`
 - [x] `flow-agent-graph`
 - [x] `flow-agent-checkpoint`
-- [ ] `flow-agent-prebuilt`
+- [x] `flow-agent-prebuilt`
 - [ ] `flow-agent` umbrella + examples
 - [ ] Publish `0.1.0` to crates.io
 

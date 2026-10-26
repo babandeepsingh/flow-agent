@@ -18,6 +18,7 @@ flow-agent-core = { path = "crates/flow-agent-core", version = "0.1.0" }
 flow-agent-models = { path = "crates/flow-agent-models", version = "0.1.0" }
 flow-agent-graph = { path = "crates/flow-agent-graph", version = "0.1.0" }
 flow-agent-checkpoint = { path = "crates/flow-agent-checkpoint", version = "0.1.0" }
+flow-agent-prebuilt = { path = "crates/flow-agent-prebuilt", version = "0.1.0" }
 
 async-trait = "0.1"
 chrono = { version = "0.4", default-features = false, features = ["clock", "serde", "std"] }
